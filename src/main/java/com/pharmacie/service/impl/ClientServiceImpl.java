@@ -1,3 +1,5 @@
-﻿package com.pharmacie.service.impl;
+package com.pharmacie.service.impl;
+
+import com.pharmacie.service.*;
 
 public class ClientServiceImpl implements ClientService {}

@@ -1,3 +1,3 @@
-﻿package com.pharmacie.dto;
+package com.pharmacie.dto;
 
 public class ProduitForm {}

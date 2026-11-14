@@ -1,3 +1,3 @@
-﻿package com.pharmacie.model;
+package com.pharmacie.model;
 
 public abstract class Produit {}

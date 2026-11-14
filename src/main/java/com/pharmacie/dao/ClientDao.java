@@ -1,3 +1,3 @@
-﻿package com.pharmacie.dao;
+package com.pharmacie.dao;
 
 public interface ClientDao {}
