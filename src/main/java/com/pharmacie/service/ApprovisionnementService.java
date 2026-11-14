@@ -1,3 +1,3 @@
-﻿package com.pharmacie.service;
+package com.pharmacie.service;
 
 public interface ApprovisionnementService {}
