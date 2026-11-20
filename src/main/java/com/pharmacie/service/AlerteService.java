@@ -1,3 +1,13 @@
 package com.pharmacie.service;
 
-public interface AlerteService {}
+import java.util.List;
+
+import com.pharmacie.dto.Alerte;
+
+public interface AlerteService {
+
+    List<Alerte> consulter(TypeAlerte type);
+
+    List<Alerte> toutesLesAlertes();
+
+}
