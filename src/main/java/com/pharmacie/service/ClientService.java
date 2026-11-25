@@ -7,8 +7,8 @@ import java.util.List;
 public interface ClientService {
     public Client ajouter(ClientForm f);
     public Client modifier(Integer id,ClientForm f);
-    /*public void desactiver(Integer id);
-    public void supprimer(Integer id);
+    public void desactiver(Integer id);
+    /*public void supprimer(Integer id);
     public List<Client> rechercher(String text);
     public List<Vente> historiqueVentes(Integer clientId);*/
 }
