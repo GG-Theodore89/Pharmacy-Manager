@@ -4,12 +4,24 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pharmacie.config.AppConfig; 
+import com.pharmacie.config.AppConfig;
+import com.pharmacie.dao.LotDao;
+import com.pharmacie.dao.ProduitDao;
 import com.pharmacie.dto.Alerte;
 import com.pharmacie.service.AlerteService;
+import com.pharmacie.service.StockService;
 import com.pharmacie.service.TypeAlerte;
 
 public class AlerteServiceImpl implements AlerteService {
+    private final LotDao lotDao;
+    private final ProduitDao produitDao;
+    private final StockService stockService;
+
+    public AlerteServiceImpl(LotDao ldao , ProduitDao pdao , StockService stk) {
+    this.lotDao = ldao;
+    this.produitDao = pdao;
+    this.stockService = stk;
+}
 
     @Override 
 
