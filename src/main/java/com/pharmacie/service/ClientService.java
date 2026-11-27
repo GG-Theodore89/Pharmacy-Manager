@@ -9,5 +9,5 @@ public interface ClientService {
     public void desactiver(Integer id);
     public void supprimer(Integer id);
     public List<Client> rechercher(String text);
-    /*public List<Vente> historiqueVentes(Integer clientId);*/
+    public List<Vente> historiqueVentes(Integer clientId);
 }

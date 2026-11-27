@@ -396,28 +396,51 @@ public class ClientServiceImpl implements ClientService {
     }
 
 
-    public List<Vente> historiqueVentes(Integer clientId){
+    
+public List<Vente> historiqueVentes(Integer clientId){
+
+        // Initialiser une liste vide pour stocker l'historique des ventes du client
         List<Vente> current_List = new ArrayList<>();
+
+        // Initialiser les ressources JDBC à null
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+
         try{
+        // Établir une connexion avec la base de données SQLite
         connection = DriverManager.getConnection("jdbc:sqlite:pharmacie.db");
+
+        // Préparer la requête SQL pour récupérer les ventes associées au client
         ps = connection.prepareStatement("SELECT * " + 
                         "FROM Vente " +
                         "INNER JOIN Client ON Vente.clientId = Client.id " +
                         "WHERE Client.id = ?");
+
+        // Affecter l'identifiant du client au paramètre de la requête
         ps.setInt(1, clientId);
+
+        // Exécuter la requête et récupérer les résultats
         rs= ps.executeQuery();
+
+        // Vérifier si au moins une vente existe
         boolean exist=rs.next();
+
+        // Si aucune vente n'est trouvée, retourner la liste vide
         if(!exist){
             return current_List;
         }
+
+        // Parcourir les résultats récupérés depuis la base de données
         while(exist){
+
+            // Initialiser la date d'annulation à null
             LocalDateTime dateAnnulation =null;
+
+            // Vérifier si la date d'annulation existe avant de la convertir
             if(rs.getString("dateAnnulation")!=null) dateAnnulation=LocalDateTime.parse(rs.getString("dateAnnulation"));
                 
-
+            // Créer un objet Vente à partir des données récupérées
             Vente current_VenteClient = new Vente(
                 rs.getInt("id"),
                 LocalDateTime.parse(rs.getString("dateVente")),
@@ -426,26 +449,38 @@ public class ClientServiceImpl implements ClientService {
                 dateAnnulation,
                 rs.getString("motifAnnulation")
             );
+
+            // Ajouter la vente à la liste de l'historique
             current_List.add(current_VenteClient);
+
+            // Passer au résultat suivant
             exist=rs.next();
         }
+
+        // Retourner la liste contenant l'historique des ventes
         return current_List;
         }
+
+        // Gérer les éventuelles erreurs liées à l'accès à la base de données
         catch (SQLException e) {
         e.printStackTrace();
         return null;
         }
 
+        // Fermer les ressources JDBC pour libérer les ressources utilisées
         finally {
             try {
+                // Fermer les ressources dans l'ordre inverse de leur création
                 if (rs != null) rs.close();
                 if (ps != null) ps.close();
                 if (connection != null) connection.close();
             } catch (SQLException e) {
+                // Afficher les éventuelles erreurs lors de la fermeture
                 e.printStackTrace();
             }
         }
     
     }
+
 
 }
