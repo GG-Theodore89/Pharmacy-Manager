@@ -10,6 +10,7 @@ import com.pharmacie.dao.LotDao;
 import com.pharmacie.dao.ProduitDao;
 import com.pharmacie.dto.Alerte;
 import com.pharmacie.model.Lot;
+import com.pharmacie.model.Produit;
 import com.pharmacie.service.AlerteService;
 import com.pharmacie.service.StockService;
 import com.pharmacie.service.TypeAlerte;
@@ -34,10 +35,28 @@ public class AlerteServiceImpl implements AlerteService {
             );
         }
         switch (type) {
-            case PERIME -> {}
+            case PERIME -> {
+                List<Lot> lots = lotDao.listerAvecQuantitePositive();
+                for( Lot lot : lots){
+                    
+                }
+            }
             case PEREMPTION_PROCHE -> {}
-            case RUPTURE -> {}
-            case STOCK_BAS -> {}
+            case RUPTURE -> {
+                List<Produit> produits = produitDao.listerTous();
+                for (Produit produit : produits) {
+                    boolean actif = produit.isActif();
+                    if(!actif) continue;
+                }
+            }
+            case STOCK_BAS -> {
+                List<Produit> produits = produitDao.listerTous();
+                for (Produit produit : produits) {
+                    boolean actif = produit.isActif();
+                    if(!actif) continue;
+                    int seuilAlerte = produit.getSeuilAlerte();
+                }
+            }
         }
         return alertes;
     }
