@@ -8,6 +8,7 @@ import com.pharmacie.config.AppConfig;
 import com.pharmacie.dao.LotDao;
 import com.pharmacie.dao.ProduitDao;
 import com.pharmacie.dto.Alerte;
+import com.pharmacie.model.Lot;
 import com.pharmacie.service.AlerteService;
 import com.pharmacie.service.StockService;
 import com.pharmacie.service.TypeAlerte;
@@ -33,7 +34,9 @@ public class AlerteServiceImpl implements AlerteService {
             ) ;
         }
         switch(type){
-            case PERIME->{}
+            case PERIME->{
+            List<Lot> lots =  lotDao.listerAvecQuantitePositive();
+            }
             case PEREMPTION_PROCHE->{}
             case RUPTURE->{}
             case STOCK_BAS->{}    
@@ -67,6 +70,7 @@ private boolean estPeremptionProche(int quantiteDisponible,LocalDate datePerempt
 private boolean estRupture(boolean actif, int stockVendable) {
 
     return actif && stockVendable==0;
+
 }
 private boolean estStockBas(boolean actif, int stockVendable,int seuilAlerte) {
 
