@@ -6,7 +6,7 @@ public class Utilisateur extends Personne {
 
     private String email;
     private String motDePasseHash;
-    private boolean actif;
+    pri     vate boolean actif;
 
     private List<Vente> ventes; // Could be removed and satisfy just with DB joins
 
