@@ -1,5 +1,5 @@
 package com.pharmacie.dao.memoire;
 
-import com.pharmacie.dao.*;
+import com.pharmacie.dao.ProduitDao;
 
-public class ProduitDaoMemoire implements ProduitDao {}
+public abstract class ProduitDaoMemoire implements ProduitDao {}

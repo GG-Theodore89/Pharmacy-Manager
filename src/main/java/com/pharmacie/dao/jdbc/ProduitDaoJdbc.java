@@ -1,5 +1,5 @@
 package com.pharmacie.dao.jdbc;
 
-import com.pharmacie.dao.*;
+import com.pharmacie.dao.ProduitDao;
 
-public class ProduitDaoJdbc implements ProduitDao {}
+public abstract class ProduitDaoJdbc implements ProduitDao {}

@@ -1,5 +1,5 @@
 package com.pharmacie.service.simule;
 
-import com.pharmacie.service.*;
+import com.pharmacie.service.ProduitService;
 
-public class ProduitServiceSimule implements ProduitService {}
+public abstract class ProduitServiceSimule implements ProduitService {}

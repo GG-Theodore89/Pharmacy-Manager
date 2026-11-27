@@ -1,3 +1,4 @@
+
 package com.pharmacie.service.impl;
 
 import java.time.LocalDate;
@@ -18,36 +19,31 @@ public class AlerteServiceImpl implements AlerteService {
     private final ProduitDao produitDao;
     private final StockService stockService;
 
-    public AlerteServiceImpl(LotDao ldao , ProduitDao pdao , StockService stk) {
-    this.lotDao = ldao;
-    this.produitDao = pdao;
-    this.stockService = stk;
-}
+    public AlerteServiceImpl(LotDao ldao, ProduitDao pdao, StockService stk) {
+        this.lotDao = ldao;
+        this.produitDao = pdao;
+        this.stockService = stk;
+    }
 
-    @Override 
-
-    public List<Alerte> consulter(TypeAlerte type){
+    @Override
+    public List<Alerte> consulter(TypeAlerte type) {
         List<Alerte> alertes = new ArrayList<>();
-        if(type == null){
+        if (type == null) {
             throw new IllegalArgumentException(
                 "type cant be null"
-            ) ;
+            );
         }
-        switch(type){
-            case PERIME->{
-            List<Lot> lots =  lotDao.listerAvecQuantitePositive();
-            }
-            case PEREMPTION_PROCHE->{}
-            case RUPTURE->{}
-            case STOCK_BAS->{}    
-
+        switch (type) {
+            case PERIME -> {}
+            case PEREMPTION_PROCHE -> {}
+            case RUPTURE -> {}
+            case STOCK_BAS -> {}
         }
         return alertes;
     }
-    
-    @Override 
 
-    public List<Alerte> toutesLesAlertes(){
+    @Override
+    public List<Alerte> toutesLesAlertes() {
         List<Alerte> alertes = new ArrayList<>();
         alertes.addAll(consulter(TypeAlerte.PERIME));
         alertes.addAll(consulter(TypeAlerte.PEREMPTION_PROCHE));
@@ -56,28 +52,22 @@ public class AlerteServiceImpl implements AlerteService {
         return alertes;
     }
 
-    private boolean estPerime(int quantiteDisponible, LocalDate datePeremption,LocalDate aujourdhui){
+    private boolean estPerime(int quantiteDisponible, LocalDate datePeremption, LocalDate aujourdhui) {
+        return (quantiteDisponible > 0 && datePeremption.isBefore(aujourdhui));
+    }
 
-        return (quantiteDisponible >0 && datePeremption.isBefore(aujourdhui)) ;
-}
-private boolean estPeremptionProche(int quantiteDisponible,LocalDate datePeremption,LocalDate aujourdhui) {
+    private boolean estPeremptionProche(int quantiteDisponible, LocalDate datePeremption, LocalDate aujourdhui) {
+        LocalDate dateLimite = aujourdhui.plusDays(AppConfig.getjoursAlertePeremption());
 
-    LocalDate dateLimite = aujourdhui.plusDays(AppConfig.getjoursAlertePeremption());
+        return (!datePeremption.isBefore(aujourdhui) && !datePeremption.isAfter(dateLimite) && quantiteDisponible > 0);
+        //this condition checks if the datepremp is not before today meaning mazal mat perima then check if datepremp is not after the date limit hich means la date dyal premp 9riba
+    }
 
-    return (!datePeremption.isBefore(aujourdhui) && !datePeremption.isAfter(dateLimite) && quantiteDisponible >0);
-    //this condition checks if the datepremp is not before today meaning mazal mat perima then check if datepremp is not after the date limit hich means la date dyal premp 9riba
-}
-private boolean estRupture(boolean actif, int stockVendable) {
+    private boolean estRupture(boolean actif, int stockVendable) {
+        return actif && stockVendable == 0;
+    }
 
-    return actif && stockVendable==0;
-
-}
-private boolean estStockBas(boolean actif, int stockVendable,int seuilAlerte) {
-
-    return actif && stockVendable>0 && stockVendable<=seuilAlerte;
-
-}
-    
-
-
+    private boolean estStockBas(boolean actif, int stockVendable, int seuilAlerte) {
+        return actif && stockVendable > 0 && stockVendable <= seuilAlerte;
+    }
 }

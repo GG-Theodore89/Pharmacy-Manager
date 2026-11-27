@@ -1,5 +1,5 @@
 package com.pharmacie.dao.memoire;
 
-import com.pharmacie.dao.*;
+import com.pharmacie.dao.LotDao;
 
-public class LotDaoMemoire implements LotDao {}
+public abstract class LotDaoMemoire implements LotDao {}
