@@ -14,10 +14,17 @@ import com.pharmacie.model.Client;
 import com.pharmacie.model.StatutVente;
 import com.pharmacie.model.Vente;
 import com.pharmacie.service.*;
+import com.pharmacie.dao.jdbc.ClientDaoJdbc;
+import com.pharmacie.dao.ClientDao;
 
 public class ClientServiceImpl implements ClientService {
 
+    private final ClientDao clientDao;
+    public ClientServiceImpl(ClientDao clientDao){
+        this.clientDao=clientDao;
+    }
     // Ajouter un nouveau client à partir des données du formulaire
+    @Override 
     public Client ajouter(ClientForm f) {
 
     // Création d'un nouvel objet Client à partir des informations saisies dans le formulaire
@@ -30,63 +37,10 @@ public class ClientServiceImpl implements ClientService {
         f.isActif(),
         f.getOrdonence()
     );
-
-    // Déclaration des variables pour gérer la connexion à la base de données
-    // et l'exécution de la requête SQL
-    Connection connection = null;
-    PreparedStatement ps = null;
-
-    try {
-        // Établir une connexion avec la base de données SQLite
-        connection = DriverManager.getConnection("jbdc:sqlite:pharmacie.db");
-
-        // Préparer la requête SQL pour insérer un nouveau client dans la table Client
-        // Les points d'interrogation (?) seront remplacés par les valeurs du client
-        ps = connection.prepareStatement(
-            "INSERT INTO Client (nom, prenom, adresse, telephone, email, actif, Ordonence)" +
-            "VALUES (?,?,?,?,?,?,?)"
-        );
-
-        // Affecter les valeurs du client aux paramètres de la requête SQL
-        ps.setString(1, current_client.getNom());
-        ps.setString(2, current_client.getPrenom());
-        ps.setString(3, current_client.getAdresse());
-        ps.setString(4, current_client.getTelephone());
-        ps.setString(5, current_client.getEmail());
-        ps.setBoolean(6, current_client.isActif());
-        ps.setString(7, current_client.getOrdonence());
-
-        // Exécuter la requête INSERT et récupérer le nombre de lignes ajoutées
-        int added = ps.executeUpdate();
-
-        // Vérifier si exactement un client a été ajouté
-        // Si ce n'est pas le cas, retourner null
-        if (added != 1) return null;
-
-        // Retourner l'objet Client après son insertion dans la base de données
-        return current_client;
-    }
-    catch(SQLException e) {
-        // Afficher les détails de l'erreur SQL en cas de problème
-        e.printStackTrace();
-
-        // Retourner null pour signaler que l'ajout a échoué
-        return null;
-    }
-    finally {
-        // Fermer les ressources dans l'ordre inverse de leur création
-        try {
-            // Fermer le PreparedStatement s'il a été initialisé
-            if (ps != null) ps.close();
-
-            // Fermer la connexion à la base de données si elle a été établie
-            if (connection != null) connection.close();
-        }
-        catch(SQLException e) {
-            // Afficher les détails d'une éventuelle erreur lors de la fermeture
-            e.printStackTrace();
-        }
-    }
+    Boolean effectuer= clientDao.insert(current_client);
+    if(!effectuer) return null;
+    return current_client;
+    
 }
 
 
