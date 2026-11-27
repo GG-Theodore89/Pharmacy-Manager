@@ -5,13 +5,18 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.pharmacie.dao.*;
 import com.pharmacie.model.Client;
+import com.pharmacie.model.StatutVente;
+import com.pharmacie.model.Vente;
 
 public class ClientDaoJdbc implements ClientDao {
     @Override 
-    public Boolean insert(Client client){
+    public Boolean enregister(Client client){
     Connection connection = null;
     PreparedStatement ps = null;
 
@@ -68,7 +73,7 @@ public class ClientDaoJdbc implements ClientDao {
     }
     }
 
-    public Client findById(Integer id){
+    public Client trouverParId(Integer id){
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -130,37 +135,154 @@ public class ClientDaoJdbc implements ClientDao {
     }
 
     @Override 
-    public Boolean update(Client client){
+    public Boolean mettreAJour(Integer id,Client client){
         // Initialisation des ressources JDBC à null
         Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
         PreparedStatement psn = null;
 
         try {
             // Établir une connexion avec la base de données SQLite
             connection = DriverManager.getConnection("jdbc:sqlite:pharmacie.db");
-
-            // Préparer la requête SQL pour rechercher le client par son ID
-            ps = connection.prepareStatement(
-                "SELECT * FROM Client WHERE id = ?"
+            // Préparer la requête SQL UPDATE pour enregistrer les modifications
+            psn = connection.prepareStatement(
+                "UPDATE Client SET nom = ?, prenom = ?, adresse = ?, " +
+                "telephone = ?, email = ?, actif = ?, Ordonence = ? WHERE id = ?"
             );
 
-            // Remplacer le paramètre ? par l'ID du client
-            ps.setInt(1, id);
+            // Affecter les nouvelles valeurs aux paramètres de la requête
+            psn.setString(1, client.getNom());
+            psn.setString(2, client.getPrenom());
+            psn.setString(3, client.getAdresse());
+            psn.setString(4, client.getTelephone());
+            psn.setString(5, client.getEmail());
+            psn.setBoolean(6,client.isActif());
+            psn.setString(7, client.getOrdonence());
+            psn.setInt(8, id);
 
-            // Exécuter la requête SELECT et récupérer les résultats
-            rs = ps.executeQuery();
+            // Exécuter la requête UPDATE et récupérer le nombre de lignes affectées
+            int rowsAffected = psn.executeUpdate();
 
-            // Vérifier si le client existe dans la base de données
-            boolean exist = rs.next();
-
-            // Si aucun client n'est trouvé, retourner null
-            if (!exist) {
-                return null;
+            // Vérifier si la modification a affecté au moins une ligne
+            if (rowsAffected == 0) {
+                return false;
             }
 
-            // Récupérer les informations du client depuis la base de données
+            // Retourner l'objet Client après la modification
+            return true;
+        }
+
+        // Gérer les éventuelles erreurs liées à l'accès à la base de données
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // Fermer toutes les ressources JDBC pour libérer les ressources utilisées
+        finally {
+            try {
+                // Fermer les ressources dans l'ordre inverse de leur création
+                if (psn != null) psn.close();
+                if (connection != null) connection.close();
+
+            } catch (SQLException e) {
+                // Afficher les éventuelles erreurs lors de la fermeture des ressources
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    @Override 
+    public Boolean supprimer(Integer id){
+        // Déclaration des variables nécessaires à la connexion
+    // et à l'exécution de la requête SQL
+    Connection connection = null;
+    PreparedStatement ps = null;
+
+    try {
+        // Établir une connexion avec la base de données SQLite
+        connection = DriverManager.getConnection("jdbc:sqlite:pharmacie.db");
+
+        // Préparer la requête SQL pour supprimer un client selon son identifiant
+        // Le point d'interrogation (?) sera remplacé par l'identifiant fourni
+        ps = connection.prepareStatement("DELETE FROM Client WHERE id = ?");
+
+        // Affecter l'identifiant du client au paramètre de la requête
+        ps.setInt(1, id);
+
+        // Exécuter la requête DELETE et récupérer le nombre de lignes supprimées
+        int rowsAffected = ps.executeUpdate();
+
+        // Vérifier si aucune ligne n'a été supprimée
+        if (rowsAffected == 0) {
+            // Quitter immédiatement la méthode si aucun client ne correspond à cet ID
+            return false;
+        }
+        return true;
+    }
+    catch (SQLException e) {
+        // Afficher les détails de l'erreur SQL en cas de problème
+        e.printStackTrace();
+        return false;
+    }
+
+    finally {
+        // Fermer les ressources dans l'ordre inverse de leur création
+        try {
+            // Fermer le PreparedStatement s'il a été initialisé
+            if (ps != null) ps.close();
+
+            // Fermer la connexion à la base de données si elle a été établie
+            if (connection != null) connection.close();
+        }
+        catch (SQLException e) {
+            // Afficher les détails d'une éventuelle erreur lors de la fermeture
+            e.printStackTrace();
+        }
+    }
+    }
+
+    public List<Client> rechercher(String text){
+        // Créer une liste vide pour stocker les clients trouvés
+    List<Client> current_List = new ArrayList<>();
+
+    // Déclaration des variables nécessaires à la connexion
+    // et à l'exécution de la requête SQL
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+        // Établir une connexion avec la base de données SQLite
+        connection = DriverManager.getConnection("jdbc:sqlite:pharmacie.db");
+
+        // Préparer une requête SQL pour rechercher les clients
+        // dont le nom ou le prénom contient le texte recherché
+        ps = connection.prepareStatement(
+            "SELECT * FROM Client WHERE NOM LIKE ? OR PRENOM LIKE ?"
+        );
+
+        // Affecter le texte de recherche aux paramètres de la requête
+        // Le symbole % permet de rechercher une correspondance partielle
+        ps.setString(1, "%" + text + "%");
+        ps.setString(2, "%" + text + "%");
+
+        // Exécuter la requête SELECT et récupérer les résultats
+        rs = ps.executeQuery();
+
+        // Vérifier si au moins une ligne existe dans le résultat
+        boolean exist = rs.next();
+
+        // Si aucun client n'est trouvé, retourner la liste vide
+        if (!exist) {
+            return current_List;
+        }
+
+        // Parcourir les résultats tant qu'une ligne existe
+        while (exist) {
+
+            // Créer un objet Client à partir des informations
+            // récupérées depuis la ligne actuelle du ResultSet
             Client current_client = new Client(
                 rs.getInt("id"),
                 rs.getString("nom"),
@@ -172,63 +294,126 @@ public class ClientDaoJdbc implements ClientDao {
                 rs.getString("Ordonence")
             );
 
-            // Mettre à jour les attributs de l'objet avec les données du formulaire
-            current_client.setNom(f.getNom());
-            current_client.setPrenom(f.getPrenom());
-            current_client.setAdresse(f.getAdresse());
-            current_client.setTelephone(f.getTelephone());
-            current_client.setEmail(f.getEmail());
-            current_client.setActif(f.isActif());
-            current_client.setOrdonence(f.getOrdonence());
+            // Ajouter le client créé à la liste des résultats
+            current_List.add(current_client);
 
-            // Préparer la requête SQL UPDATE pour enregistrer les modifications
-            psn = connection.prepareStatement(
-                "UPDATE Client SET nom = ?, prenom = ?, adresse = ?, " +
-                "telephone = ?, email = ?, actif = ?, Ordonence = ? WHERE id = ?"
+            // Passer à la ligne suivante du ResultSet
+            exist = rs.next();
+        }
+
+        // Retourner la liste contenant tous les clients trouvés
+        return current_List;
+    }
+    catch (SQLException e) {
+        // Afficher les détails de l'erreur SQL en cas de problème
+        e.printStackTrace();
+
+        // Retourner null pour signaler qu'une erreur SQL est survenue
+        return null;
+    }
+
+    finally {
+        // Fermer les ressources dans l'ordre inverse de leur création
+        try {
+            // Fermer le ResultSet s'il a été initialisé
+            if (rs != null) rs.close();
+
+            // Fermer le PreparedStatement s'il a été initialisé
+            if (ps != null) ps.close();
+
+            // Fermer la connexion à la base de données si elle a été établie
+            if (connection != null) connection.close();
+        }
+        catch (SQLException e) {
+            // Afficher les détails d'une éventuelle erreur lors de la fermeture
+            e.printStackTrace();
+        }
+    }
+    }
+    
+    public List<Vente> aDesVentes(int clientId){
+        // Initialiser une liste vide pour stocker l'historique des ventes du client
+        List<Vente> current_List = new ArrayList<>();
+
+        // Initialiser les ressources JDBC à null
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+        // Établir une connexion avec la base de données SQLite
+        connection = DriverManager.getConnection("jdbc:sqlite:pharmacie.db");
+
+        // Préparer la requête SQL pour récupérer les ventes associées au client
+        ps = connection.prepareStatement("SELECT * " + 
+                        "FROM Vente " +
+                        "INNER JOIN Client ON Vente.clientId = Client.id " +
+                        "WHERE Client.id = ?");
+
+        // Affecter l'identifiant du client au paramètre de la requête
+        ps.setInt(1, clientId);
+
+        // Exécuter la requête et récupérer les résultats
+        rs= ps.executeQuery();
+
+        // Vérifier si au moins une vente existe
+        boolean exist=rs.next();
+
+        // Si aucune vente n'est trouvée, retourner la liste vide
+        if(!exist){
+            return current_List;
+        }
+
+        // Parcourir les résultats récupérés depuis la base de données
+        while(exist){
+
+            // Initialiser la date d'annulation à null
+            LocalDateTime dateAnnulation =null;
+
+            // Vérifier si la date d'annulation existe avant de la convertir
+            if(rs.getString("dateAnnulation")!=null) dateAnnulation=LocalDateTime.parse(rs.getString("dateAnnulation"));
+                
+            // Créer un objet Vente à partir des données récupérées
+            Vente current_VenteClient = new Vente(
+                rs.getInt("id"),
+                LocalDateTime.parse(rs.getString("dateVente")),
+                rs.getBigDecimal("montantTotal"),
+                StatutVente.valueOf(rs.getString("statutVente")),
+                dateAnnulation,
+                rs.getString("motifAnnulation")
             );
 
-            // Affecter les nouvelles valeurs aux paramètres de la requête
-            psn.setString(1, current_client.getNom());
-            psn.setString(2, current_client.getPrenom());
-            psn.setString(3, current_client.getAdresse());
-            psn.setString(4, current_client.getTelephone());
-            psn.setString(5, current_client.getEmail());
-            psn.setBoolean(6, current_client.isActif());
-            psn.setString(7, current_client.getOrdonence());
-            psn.setInt(8, id);
+            // Ajouter la vente à la liste de l'historique
+            current_List.add(current_VenteClient);
 
-            // Exécuter la requête UPDATE et récupérer le nombre de lignes affectées
-            int rowsAffected = psn.executeUpdate();
+            // Passer au résultat suivant
+            exist=rs.next();
+        }
 
-            // Vérifier si la modification a affecté au moins une ligne
-            if (rowsAffected == 0) {
-                return null;
-            }
-
-            // Retourner l'objet Client après la modification
-            return current_client;
+        // Retourner la liste contenant l'historique des ventes
+        return current_List;
         }
 
         // Gérer les éventuelles erreurs liées à l'accès à la base de données
         catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+        e.printStackTrace();
+        return null;
         }
 
-        // Fermer toutes les ressources JDBC pour libérer les ressources utilisées
+        // Fermer les ressources JDBC pour libérer les ressources utilisées
         finally {
             try {
                 // Fermer les ressources dans l'ordre inverse de leur création
-                if (psn != null) psn.close();
                 if (rs != null) rs.close();
                 if (ps != null) ps.close();
                 if (connection != null) connection.close();
-
             } catch (SQLException e) {
-                // Afficher les éventuelles erreurs lors de la fermeture des ressources
+                // Afficher les éventuelles erreurs lors de la fermeture
                 e.printStackTrace();
             }
         }
+    
     }
-    }
+    
 }
+
