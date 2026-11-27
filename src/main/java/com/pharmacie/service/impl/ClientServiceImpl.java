@@ -5,9 +5,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.pharmacie.dto.ClientForm;
 import com.pharmacie.model.Client;
+import com.pharmacie.model.Vente;
 import com.pharmacie.service.*;
 
 public class ClientServiceImpl implements ClientService {
@@ -189,36 +193,243 @@ public class ClientServiceImpl implements ClientService {
         }
     }
 
-    public void desactiver(Integer id){
+        public void desactiver(Integer id) {
+
+        // Déclaration des variables nécessaires à la connexion et à l'exécution des requêtes SQL
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         PreparedStatement psn = null;
+
+        try {
+            // Établir une connexion avec la base de données SQLite
+            connection = DriverManager.getConnection("jdbc:sqlite:pharmacie.db");
+
+            // Préparer une requête pour rechercher un client à partir de son identifiant
+            ps = connection.prepareStatement("SELECT * FROM Client WHERE id= ? ");
+
+            // Affecter l'identifiant du client au paramètre de la requête
+            ps.setInt(1, id);
+
+            // Exécuter la requête SELECT et récupérer le résultat
+            rs = ps.executeQuery();
+
+            // Vérifier si le résultat contient au moins un client
+            boolean exist = rs.next();
+
+            // Si le client n'existe pas, quitter immédiatement la méthode
+            if (!exist) {
+                return;
+            }
+
+            // Préparer une requête SQL pour modifier l'état du client
+            psn = connection.prepareStatement("UPDATE Client SET actif= ? WHERE id= ?");
+
+            // Définir la valeur de l'attribut actif à false pour désactiver le client
+            psn.setBoolean(1, false);
+
+            // Indiquer l'identifiant du client à désactiver
+            psn.setInt(2, id);
+
+            // Exécuter la requête UPDATE et récupérer le nombre de lignes modifiées
+            int rowsAffected = psn.executeUpdate();
+
+            // Si aucune ligne n'a été modifiée, quitter la méthode
+            if (rowsAffected == 0) {
+                return;
+            }
+        }
+        catch (SQLException e) {
+            // Afficher les informations de l'erreur SQL
+            e.printStackTrace();
+        }
+        finally {
+            // Fermer les ressources dans l'ordre inverse de leur création
+            try {
+                if (psn != null) psn.close();
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (connection != null) connection.close();
+            }
+            catch (SQLException e) {
+                // Gérer les erreurs pouvant survenir lors de la fermeture des ressources
+                e.printStackTrace();
+            }
+        }
+    }
+    public void supprimer(Integer id) {
+
+    // Déclaration des variables nécessaires à la connexion
+    // et à l'exécution de la requête SQL
+    Connection connection = null;
+    PreparedStatement ps = null;
+
+    try {
+        // Établir une connexion avec la base de données SQLite
+        connection = DriverManager.getConnection("jdbc:sqlite:pharmacie.db");
+
+        // Préparer la requête SQL pour supprimer un client selon son identifiant
+        // Le point d'interrogation (?) sera remplacé par l'identifiant fourni
+        ps = connection.prepareStatement("DELETE FROM Client WHERE id = ?");
+
+        // Affecter l'identifiant du client au paramètre de la requête
+        ps.setInt(1, id);
+
+        // Exécuter la requête DELETE et récupérer le nombre de lignes supprimées
+        int rowsAffected = ps.executeUpdate();
+
+        // Vérifier si aucune ligne n'a été supprimée
+        if (rowsAffected == 0) {
+            // Quitter immédiatement la méthode si aucun client ne correspond à cet ID
+            return;
+        }
+    }
+    catch (SQLException e) {
+        // Afficher les détails de l'erreur SQL en cas de problème
+        e.printStackTrace();
+    }
+
+    finally {
+        // Fermer les ressources dans l'ordre inverse de leur création
+        try {
+            // Fermer le PreparedStatement s'il a été initialisé
+            if (ps != null) ps.close();
+
+            // Fermer la connexion à la base de données si elle a été établie
+            if (connection != null) connection.close();
+        }
+        catch (SQLException e) {
+            // Afficher les détails d'une éventuelle erreur lors de la fermeture
+            e.printStackTrace();
+        }
+    }
+}
+    public List<Client> rechercher(String text) {
+
+    // Créer une liste vide pour stocker les clients trouvés
+    List<Client> current_List = new ArrayList<>();
+
+    // Déclaration des variables nécessaires à la connexion
+    // et à l'exécution de la requête SQL
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+        // Établir une connexion avec la base de données SQLite
+        connection = DriverManager.getConnection("jdbc:sqlite:pharmacie.db");
+
+        // Préparer une requête SQL pour rechercher les clients
+        // dont le nom ou le prénom contient le texte recherché
+        ps = connection.prepareStatement(
+            "SELECT * FROM Client WHERE NOM LIKE ? OR PRENOM LIKE ?"
+        );
+
+        // Affecter le texte de recherche aux paramètres de la requête
+        // Le symbole % permet de rechercher une correspondance partielle
+        ps.setString(1, "%" + text + "%");
+        ps.setString(2, "%" + text + "%");
+
+        // Exécuter la requête SELECT et récupérer les résultats
+        rs = ps.executeQuery();
+
+        // Vérifier si au moins une ligne existe dans le résultat
+        boolean exist = rs.next();
+
+        // Si aucun client n'est trouvé, retourner la liste vide
+        if (!exist) {
+            return current_List;
+        }
+
+        // Parcourir les résultats tant qu'une ligne existe
+        while (exist) {
+
+            // Créer un objet Client à partir des informations
+            // récupérées depuis la ligne actuelle du ResultSet
+            Client current_client = new Client(
+                rs.getInt("id"),
+                rs.getString("nom"),
+                rs.getString("prenom"),
+                rs.getString("adresse"),
+                rs.getString("telephone"),
+                rs.getString("email"),
+                rs.getBoolean("actif"),
+                rs.getString("Ordonence")
+            );
+
+            // Ajouter le client créé à la liste des résultats
+            current_List.add(current_client);
+
+            // Passer à la ligne suivante du ResultSet
+            exist = rs.next();
+        }
+
+        // Retourner la liste contenant tous les clients trouvés
+        return current_List;
+    }
+    catch (SQLException e) {
+        // Afficher les détails de l'erreur SQL en cas de problème
+        e.printStackTrace();
+
+        // Retourner null pour signaler qu'une erreur SQL est survenue
+        return null;
+    }
+
+    finally {
+        // Fermer les ressources dans l'ordre inverse de leur création
+        try {
+            // Fermer le ResultSet s'il a été initialisé
+            if (rs != null) rs.close();
+
+            // Fermer le PreparedStatement s'il a été initialisé
+            if (ps != null) ps.close();
+
+            // Fermer la connexion à la base de données si elle a été établie
+            if (connection != null) connection.close();
+        }
+        catch (SQLException e) {
+            // Afficher les détails d'une éventuelle erreur lors de la fermeture
+            e.printStackTrace();
+        }
+    }
+    }
+
+
+    public List<Vente> historiqueVentes(Integer clientId){
+        List<Vente> current_List = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try{
         connection = DriverManager.getConnection("jdbc:sqlite:pharmacie.db");
-        ps = connection.prepareStatement("SELECT * FROM Client WHERE id= ? ");
-        ps.setInt(1,id);
+        ps = connection.prepareStatement("SELECT * FROM Vente" + 
+                        "FROM Vente" +
+                        "INNER JOIN Client ON Vente.clientId = Client.id" +
+                        "WHERE Client.id = ?");
+        ps.setInt(1, clientId);
         rs= ps.executeQuery();
         boolean exist=rs.next();
         if(!exist){
-            return;
+            return current_List;
         }
-
-        psn= connection.prepareStatement("UPDATE Client SET actif= ? WHERE id= ?");
-        psn.setBoolean(1, false);
-        psn.setInt(2, id);
-        int rowsAffected = psn.executeUpdate();
-        if(rowsAffected==0){
-            return;
+        while(exist){
+            Vente current_VenteClient = new Vente(
+                rs.getInt("id"),
+                LocalDateTime.parse(rs.getString("dateVente")),
+                
+            );
+            current_List.add(current_client);
+            exist=rs.next();
         }
+        return current_List;
         }
         catch (SQLException e) {
         e.printStackTrace();
+        return null;
         }
 
         finally {
             try {
-                if (psn != null) psn.close();
                 if (rs != null) rs.close();
                 if (ps != null) ps.close();
                 if (connection != null) connection.close();
@@ -228,4 +439,5 @@ public class ClientServiceImpl implements ClientService {
         }
     
     }
+
 }
