@@ -1,3 +1,5 @@
 package com.pharmacie.dto;
 
-public class NouvelUtilisateur {}
+public class NouvelUtilisateur {
+    
+}
