@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.pharmacie.dto.ClientForm;
 import com.pharmacie.model.Client;
+import com.pharmacie.model.StatutVente;
 import com.pharmacie.model.Vente;
 import com.pharmacie.service.*;
 
@@ -402,9 +403,9 @@ public class ClientServiceImpl implements ClientService {
         ResultSet rs = null;
         try{
         connection = DriverManager.getConnection("jdbc:sqlite:pharmacie.db");
-        ps = connection.prepareStatement("SELECT * FROM Vente" + 
-                        "FROM Vente" +
-                        "INNER JOIN Client ON Vente.clientId = Client.id" +
+        ps = connection.prepareStatement("SELECT * " + 
+                        "FROM Vente " +
+                        "INNER JOIN Client ON Vente.clientId = Client.id " +
                         "WHERE Client.id = ?");
         ps.setInt(1, clientId);
         rs= ps.executeQuery();
@@ -413,12 +414,19 @@ public class ClientServiceImpl implements ClientService {
             return current_List;
         }
         while(exist){
+            LocalDateTime dateAnnulation =null;
+            if(rs.getString("dateAnnulation")!=null) dateAnnulation=LocalDateTime.parse(rs.getString("dateAnnulation"));
+                
+
             Vente current_VenteClient = new Vente(
                 rs.getInt("id"),
                 LocalDateTime.parse(rs.getString("dateVente")),
-                
+                rs.getBigDecimal("montantTotal"),
+                StatutVente.valueOf(rs.getString("statutVente")),
+                dateAnnulation,
+                rs.getString("motifAnnulation")
             );
-            current_List.add(current_client);
+            current_List.add(current_VenteClient);
             exist=rs.next();
         }
         return current_List;
