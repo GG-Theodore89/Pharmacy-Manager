@@ -1,16 +1,13 @@
 package com.pharmacie.service.impl;
 
+import com.pharmacie.dao.ApprovisionnementDao;
+import com.pharmacie.dao.LotDao;
+import com.pharmacie.dao.ProduitDao;
 import com.pharmacie.dto.ApproForm;
 import com.pharmacie.dto.LigneApproForm;
 import com.pharmacie.exception.DonneeInvalideException;
 import com.pharmacie.model.Approvisionnement;
 import com.pharmacie.service.ApprovisionnementService;
-import com.pharmacie.dao.ApprovisionnementDao;
-import com.pharmacie.dao.LotDao;
-import com.pharmacie.dao.ProduitDao;
-import com.pharmacie.exception.EntiteIntrouvableException;
-import com.pharmacie.exception.RegleMetierException;
-import com.pharmacie.model.Produit;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,6 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class ApprovisionnementServiceImpl implements ApprovisionnementService {
+
+    // Ces DAO seront utilisés dans les étapes suivantes.
     private final ApprovisionnementDao approvisionnementDao;
     private final LotDao lotDao;
     private final ProduitDao produitDao;
@@ -34,25 +33,34 @@ public class ApprovisionnementServiceImpl implements ApprovisionnementService {
 
     @Override
     public Approvisionnement enregistrer(ApproForm form, int userId) {
-        validerFormulaire(form);
-        verifierDonneesEnBase(form);
+        validerFormulaire(form, userId);
 
-        // Provisoire : la sauvegarde sera ajoutée après le raccordement aux DAO.
+        // La sauvegarde sera ajoutée après le raccordement aux DAO
+        // et à la transaction.
         return null;
     }
 
     @Override
     public List<Approvisionnement> historique() {
-        // Provisoire : le chargement de l'historique sera ajouté avec les DAO.
+        // Le chargement de l'historique sera ajouté avec les DAO.
         return List.of();
     }
 
-    private void validerFormulaire(ApproForm form) {
+    private void validerFormulaire(ApproForm form, int userId) {
+        if (userId <= 0) {
+            throw new DonneeInvalideException();
+        }
+
         if (form == null) {
             throw new DonneeInvalideException();
         }
 
         if (form.getDateReception() == null) {
+            throw new DonneeInvalideException();
+        }
+
+        Integer fournisseurId = form.getFournisseurId();
+        if (fournisseurId != null && fournisseurId <= 0) {
             throw new DonneeInvalideException();
         }
 
@@ -64,6 +72,10 @@ public class ApprovisionnementServiceImpl implements ApprovisionnementService {
 
         for (LigneApproForm ligne : form.getLignes()) {
             if (ligne == null) {
+                throw new DonneeInvalideException();
+            }
+
+            if (ligne.getProduitId() <= 0) {
                 throw new DonneeInvalideException();
             }
 
@@ -89,27 +101,6 @@ public class ApprovisionnementServiceImpl implements ApprovisionnementService {
             );
 
             if (!numerosDuProduit.add(numeroLotNormalise)) {
-                throw new DonneeInvalideException();
-            }
-        }
-    }
-    private void verifierDonneesEnBase(ApproForm form) {
-        for (LigneApproForm ligne : form.getLignes()) {
-            Produit produit = produitDao.trouverParId(ligne.getProduitId());
-
-            if (produit == null) {
-                throw new EntiteIntrouvableException();
-            }
-
-            if (!produit.isActif()) {
-                throw new RegleMetierException();
-            }
-
-            String numeroLot = ligne.getNumeroLot().trim();
-
-            if (lotDao.existeParProduitEtNumero(
-                    ligne.getProduitId(),
-                    numeroLot)) {
                 throw new DonneeInvalideException();
             }
         }
