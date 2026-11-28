@@ -1,3 +1,9 @@
 package com.pharmacie.service;
 
-public interface TicketService {}
+import com.pharmacie.dto.Ticket;
+import com.pharmacie.model.Vente;
+
+public interface TicketService {
+
+    Ticket genererTicket(Vente v);
+}

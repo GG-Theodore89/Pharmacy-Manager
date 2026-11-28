@@ -33,4 +33,40 @@ public class Vente {
         this.client = client;
         this.lignes = lignes;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public LocalDateTime getDateVente() {
+        return dateVente;
+    }
+
+    public StatutVente getStatut() {
+        return statut;
+    }
+
+    public LocalDateTime getDateAnnulation() {
+        return dateAnnulation;
+    }
+
+    public String getMotifAnnulation() {
+        return motifAnnulation;
+    }
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public List<LigneVente> getLignes() {
+        return lignes;
+    }
+
+    public BigDecimal getMontantTotal() {
+        return montantTotal;
+    }
 }

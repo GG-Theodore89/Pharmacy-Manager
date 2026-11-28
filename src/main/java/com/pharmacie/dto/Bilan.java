@@ -24,4 +24,28 @@ public class Bilan {
         this.nombreAnnulations = nombreAnnulations;
         this.panierMoyen = panierMoyen;
     }
+
+    public LocalDate getDateDebut() {
+        return dateDebut;
+    }
+
+    public LocalDate getDateFin() {
+        return dateFin;
+    }
+
+    public BigDecimal getChiffreAffaires() {
+        return chiffreAffaires;
+    }
+
+    public int getNombreVentes() {
+        return nombreVentes;
+    }
+
+    public int getNombreAnnulations() {
+        return nombreAnnulations;
+    }
+
+    public BigDecimal getPanierMoyen() {
+        return panierMoyen;
+    }
 }

@@ -6,7 +6,7 @@ public class Utilisateur extends Personne {
 
     private String email;
     private String motDePasseHash;
-    pri     vate boolean actif;
+    private boolean actif;
 
     private List<Vente> ventes; // Could be removed and satisfy just with DB joins
 
@@ -18,5 +18,17 @@ public class Utilisateur extends Personne {
         this.email = email;
         this.motDePasseHash = motDePasseHash;
         this.actif = actif;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getMotDePasseHash() {
+        return motDePasseHash;
+    }
+
+    public boolean isActif() {
+        return actif;
     }
 }

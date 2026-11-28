@@ -1,0 +1,326 @@
+.app-root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-background-color: #f4f7fb;
+}
+
+.app-header {
+    -fx-background-color: linear-gradient(to right, #0f766e, #1d4ed8);
+}
+
+.app-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.app-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #e0f2fe;
+}
+
+.logout-button {
+    -fx-background-color: rgba(255, 255, 255, 0.16);
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(255, 255, 255, 0.45);
+    -fx-border-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 18;
+    -fx-cursor: hand;
+}
+
+.logout-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.28);
+}
+
+.logout-button:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.38);
+}
+
+.home-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.home-content {
+    -fx-background-color: transparent;
+}
+
+.section-caption {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748b;
+}
+
+.feature-grid {
+    -fx-background-color: transparent;
+}
+
+.feature-card {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.08), 12, 0, 0, 4);
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.card-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+}
+
+.feature-button {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 8;
+    -fx-text-fill: #0f172a;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 9 12;
+    -fx-wrap-text: true;
+    -fx-cursor: hand;
+}
+
+.feature-button:hover {
+    -fx-background-color: #e0f2fe;
+    -fx-border-color: #38bdf8;
+}
+
+.feature-button:pressed {
+    -fx-background-color: #bae6fd;
+}
+
+.main-menu {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+    -fx-padding: 0 20;
+}
+
+.main-menu .menu {
+    -fx-text-fill: #334155;
+    -fx-font-weight: bold;
+}
+
+.main-menu .menu:showing {
+    -fx-background-color: #e0f2fe;
+}
+
+.workspace-tabs {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.workspace-tabs .tab-header-area .tab-header-background {
+    -fx-background-color: #e8eef6;
+}
+
+.workspace-tabs .tab {
+    -fx-background-color: #dbe4ef;
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-color: transparent;
+    -fx-padding: 8 14;
+}
+
+.workspace-tabs .tab:selected {
+    -fx-background-color: #ffffff;
+}
+
+.workspace-tabs .tab .tab-label {
+    -fx-text-fill: #475569;
+    -fx-font-weight: bold;
+}
+
+.workspace-tabs .tab:selected .tab-label {
+    -fx-text-fill: #0f766e;
+}
+
+.page-root {
+    -fx-background-color: #f4f7fb;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.page-header {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+    -fx-padding: 18 28;
+}
+
+.page-title {
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.page-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
+}
+
+.page-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.page-content {
+    -fx-background-color: transparent;
+}
+
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 10, 0, 0, 3);
+    -fx-padding: 18;
+}
+
+.card-heading {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f766e;
+}
+
+.form-grid {
+    -fx-background-color: transparent;
+}
+
+.form-grid > .label {
+    -fx-text-fill: #475569;
+}
+
+.field-caption {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+}
+
+.value-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #0f172a;
+}
+
+.inline-message {
+    -fx-font-size: 13px;
+    -fx-text-fill: #1d4ed8;
+}
+
+.metric-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f766e;
+}
+
+.total-label {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.primary-button {
+    -fx-background-color: #0f766e;
+    -fx-background-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 9 16;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: #115e59;
+}
+
+.secondary-button {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 8;
+    -fx-text-fill: #0f172a;
+    -fx-font-weight: bold;
+    -fx-padding: 9 16;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #e0f2fe;
+    -fx-border-color: #38bdf8;
+}
+
+.danger-button {
+    -fx-background-color: #fef2f2;
+    -fx-background-radius: 8;
+    -fx-border-color: #fecaca;
+    -fx-border-radius: 8;
+    -fx-text-fill: #b91c1c;
+    -fx-font-weight: bold;
+    -fx-padding: 9 16;
+    -fx-cursor: hand;
+}
+
+.danger-button:hover {
+    -fx-background-color: #fee2e2;
+}
+
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-table-cell-border-color: #e2e8f0;
+}
+
+.table-view .column-header {
+    -fx-background-color: #f1f5f9;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #475569;
+    -fx-font-weight: bold;
+}
+
+.list-view {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+}
+
+.selection-split {
+    -fx-background-color: #f4f7fb;
+    -fx-padding: 0;
+}
+
+.selection-split > .split-pane-divider {
+    -fx-background-color: #e2e8f0;
+    -fx-padding: 0 1;
+}
+
+.selection-pane {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent #e2e8f0 transparent transparent;
+}
+
+.selection-tree {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 10;
+    -fx-font-size: 13px;
+}
+
+.selection-tree .tree-cell {
+    -fx-padding: 6 10;
+}
+
+.selection-tree .tree-cell:selected {
+    -fx-background-color: #ccfbf1;
+    -fx-text-fill: #0f766e;
+}
+
+.id-field {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #475569;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.pharmacie.ui.controller.AlertesController"
+            styleClass="page-root">
+
+    <top>
+        <VBox styleClass="page-header">
+            <Label text="Alertes" styleClass="page-title"/>
+            <Label text="Suivi à la demande des stocks, ruptures et péremptions"
+                   styleClass="page-subtitle"/>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="page-scroll">
+            <content>
+                <VBox spacing="18.0" styleClass="page-content">
+                    <padding>
+                        <Insets top="24.0" right="28.0" bottom="28.0" left="28.0"/>
+                    </padding>
+
+                    <VBox spacing="12.0" styleClass="card">
+                        <Label text="Filtrer les alertes" styleClass="card-heading"/>
+                        <HBox spacing="10.0" alignment="CENTER_LEFT">
+                            <ComboBox fx:id="typeComboBox" prefWidth="240.0"/>
+                            <Button text="Consulter" onAction="#handleConsulter"
+                                    styleClass="primary-button"/>
+                            <Button text="Toutes les alertes" onAction="#handleToutes"
+                                    styleClass="secondary-button"/>
+                        </HBox>
+                        <Label fx:id="messageLabel" styleClass="inline-message" wrapText="true"/>
+                    </VBox>
+
+                    <VBox spacing="12.0" styleClass="card">
+                        <Label fx:id="countLabel" text="0 alerte" styleClass="card-heading"/>
+                        <ListView fx:id="alertesList" prefHeight="380.0"/>
+                    </VBox>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>

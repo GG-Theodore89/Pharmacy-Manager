@@ -17,4 +17,33 @@ public class NouvelUtilisateur {
         this.motDePasse = motDePasse;
         this.actif = actif;
     }
+
+    public NouvelUtilisateur(String nom, String prenom, String adresse,
+                             String email, String motDePasse) {
+        this(nom, prenom, adresse, email, motDePasse, true);
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public String getAdresse() {
+        return adresse;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getMotDePasse() {
+        return motDePasse;
+    }
+
+    public boolean isActif() {
+        return actif;
+    }
 }

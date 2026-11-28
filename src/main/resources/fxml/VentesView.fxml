@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.pharmacie.ui.controller.VentesController"
+            styleClass="page-root">
+
+    <top>
+        <VBox styleClass="page-header">
+            <Label text="Ventes" styleClass="page-title"/>
+            <Label text="Valider le panier (stock FEFO, ticket) et annuler une vente avec restitution"
+                   styleClass="page-subtitle"/>
+        </VBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.3" styleClass="selection-split">
+            <items>
+                <VBox spacing="10.0" styleClass="selection-pane">
+                    <padding>
+                        <Insets top="20.0" right="14.0" bottom="20.0" left="20.0"/>
+                    </padding>
+                    <Label text="Rechercher" styleClass="card-heading"/>
+                    <TextField fx:id="rechercheField" promptText="Client ou référence"/>
+                    <Button text="Rechercher" onAction="#handleRechercher"
+                            styleClass="primary-button"/>
+                    <TreeView fx:id="arbreSelection" VBox.vgrow="ALWAYS"
+                              styleClass="selection-tree"/>
+                </VBox>
+
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="page-scroll">
+                    <content>
+                        <VBox spacing="18.0" styleClass="page-content">
+                            <padding>
+                                <Insets top="24.0" right="28.0" bottom="28.0" left="28.0"/>
+                            </padding>
+
+                            <VBox spacing="12.0" styleClass="card">
+                                <Label text="Panier à valider" styleClass="card-heading"/>
+                                <Label fx:id="utilisateurLabel" styleClass="value-label"/>
+                                <Label fx:id="panierResumeLabel" styleClass="value-label" wrapText="true"/>
+                                <HBox alignment="CENTER_RIGHT" spacing="12.0">
+                                    <Label text="Montant du panier" styleClass="field-caption"/>
+                                    <Label fx:id="montantLabel" text="0,00" styleClass="total-label"/>
+                                </HBox>
+                                <HBox spacing="10.0">
+                                    <Button text="Actualiser le panier" onAction="#handleActualiserPanier"
+                                            styleClass="secondary-button"/>
+                                </HBox>
+                            </VBox>
+
+                            <VBox spacing="12.0" styleClass="card">
+                                <Label text="Valider la vente" styleClass="card-heading"/>
+                                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                    <Label text="Client (facultatif)"/>
+                                    <TextField fx:id="clientIdField" editable="false"
+                                               promptText="Sélectionnez un client dans l'arbre"
+                                               prefWidth="210.0" styleClass="id-field"/>
+                                    <Button text="Valider la vente" onAction="#handleValiderVente"
+                                            styleClass="primary-button"/>
+                                </HBox>
+                                <Label fx:id="resultatLabel" styleClass="inline-message" wrapText="true"/>
+                            </VBox>
+
+                            <VBox spacing="12.0" styleClass="card">
+                                <Label text="Annuler une vente validée" styleClass="card-heading"/>
+                                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                    <Label text="Vente sélectionnée"/>
+                                    <TextField fx:id="venteIdField" editable="false"
+                                               promptText="Sélectionnez une vente dans l'arbre"
+                                               prefWidth="210.0" styleClass="id-field"/>
+                                    <Label text="Motif"/>
+                                    <TextField fx:id="motifField" promptText="Facultatif" prefWidth="220.0"/>
+                                    <Button text="Annuler la vente" onAction="#handleAnnulerVente"
+                                            styleClass="danger-button"/>
+                                </HBox>
+                            </VBox>
+
+                            <VBox spacing="12.0" styleClass="card">
+                                <Label text="Ticket de la dernière vente" styleClass="card-heading"/>
+                                <Label fx:id="ticketLabel" styleClass="value-label" wrapText="true"/>
+                                <HBox spacing="10.0">
+                                    <Button text="Générer le ticket" onAction="#handleGenererTicket"
+                                            styleClass="secondary-button"/>
+                                </HBox>
+                            </VBox>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </items>
+        </SplitPane>
+    </center>
+</BorderPane>

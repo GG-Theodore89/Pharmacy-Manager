@@ -100,6 +100,12 @@
                                        promptText="Choisissez un mot de passe"
                                        maxWidth="Infinity"
                                        onAction="#handleInscription"/>
+                        <Label fx:id="inscriptionMotDePasseSuggestionLabel"
+                               styleClass="field-caption"
+                               wrapText="true"
+                               maxWidth="Infinity"
+                               visible="false"
+                               managed="false"/>
                     </VBox>
 
                     <Label fx:id="inscriptionErreurLabel"

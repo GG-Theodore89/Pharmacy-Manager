@@ -10,6 +10,8 @@ import java.util.List;
 import com.pharmacie.model.Vente;
 import com.pharmacie.model.StatutVente;
 import com.pharmacie.dto.Bilan;
+import com.pharmacie.exception.DonneeInvalideException;
+import com.pharmacie.exception.EntiteIntrouvableException;
 
 public class BilanServiceImpl implements BilanService {
     private final VenteDao venteDao;

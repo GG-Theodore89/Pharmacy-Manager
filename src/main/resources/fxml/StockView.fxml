@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.pharmacie.ui.controller.StockController"
+            styleClass="page-root">
+
+    <top>
+        <VBox styleClass="page-header">
+            <Label text="Stock et lots" styleClass="page-title"/>
+            <Label text="Stock vendable calculé à partir des lots non périmés — prélèvement FEFO"
+                   styleClass="page-subtitle"/>
+        </VBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.3" styleClass="selection-split">
+            <items>
+                <VBox spacing="10.0" styleClass="selection-pane">
+                    <padding>
+                        <Insets top="20.0" right="14.0" bottom="20.0" left="20.0"/>
+                    </padding>
+                    <Label text="Rechercher un produit" styleClass="card-heading"/>
+                    <TextField fx:id="rechercheField" promptText="Nom du produit"/>
+                    <HBox spacing="8.0">
+                        <Button text="Rechercher" onAction="#handleRechercher"
+                                styleClass="primary-button"/>
+                        <Button text="Tout afficher" onAction="#handleAfficherTous"
+                                styleClass="secondary-button"/>
+                    </HBox>
+                    <TreeView fx:id="arbreProduits" VBox.vgrow="ALWAYS"
+                              styleClass="selection-tree"/>
+                </VBox>
+
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="page-scroll">
+                    <content>
+                        <VBox spacing="18.0" styleClass="page-content">
+                            <padding>
+                                <Insets top="24.0" right="28.0" bottom="28.0" left="28.0"/>
+                            </padding>
+
+                            <VBox spacing="12.0" styleClass="card">
+                                <Label text="Consultation du stock" styleClass="card-heading"/>
+                                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                    <Label text="Produit sélectionné"/>
+                                    <TextField fx:id="produitIdField" editable="false"
+                                               promptText="Sélectionnez dans l'arbre"
+                                               prefWidth="180.0" styleClass="id-field"/>
+                                    <Label text="Quantité"/>
+                                    <TextField fx:id="quantiteField" promptText="0" prefWidth="90.0"/>
+                                </HBox>
+                                <HBox spacing="10.0">
+                                    <Button text="Calculer le stock" onAction="#handleCalculerStock"
+                                            styleClass="primary-button"/>
+                                    <Button text="Vérifier la disponibilité"
+                                            onAction="#handleVerifierDisponibilite"
+                                            styleClass="secondary-button"/>
+                                    <Button text="Voir les lots" onAction="#handleChargerLots"
+                                            styleClass="secondary-button"/>
+                                </HBox>
+                                <HBox spacing="24.0">
+                                    <VBox spacing="4.0">
+                                        <Label text="Stock disponible" styleClass="field-caption"/>
+                                        <Label fx:id="stockLabel" text="—" styleClass="metric-label"/>
+                                    </VBox>
+                                    <VBox spacing="4.0">
+                                        <Label text="Disponibilité" styleClass="field-caption"/>
+                                        <Label fx:id="disponibiliteLabel" text="—" styleClass="metric-label"/>
+                                    </VBox>
+                                </HBox>
+                                <Label fx:id="messageLabel" styleClass="inline-message" wrapText="true"/>
+                            </VBox>
+
+                            <VBox spacing="12.0" styleClass="card">
+                                <Label text="Lots du produit" styleClass="card-heading"/>
+                                <TableView fx:id="lotsTable" prefHeight="230.0">
+                                    <columns>
+                                        <TableColumn fx:id="lotIdCol" text="N° lot" prefWidth="70.0"/>
+                                        <TableColumn fx:id="numeroLotCol" text="Numéro" prefWidth="140.0"/>
+                                        <TableColumn fx:id="receptionCol" text="Réception" prefWidth="130.0"/>
+                                        <TableColumn fx:id="peremptionCol" text="Péremption" prefWidth="130.0"/>
+                                        <TableColumn fx:id="initialeCol" text="Initiale" prefWidth="90.0"/>
+                                        <TableColumn fx:id="disponibleCol" text="Disponible" prefWidth="100.0"/>
+                                    </columns>
+                                    <placeholder>
+                                        <Label text="Aucun lot affiché"/>
+                                    </placeholder>
+                                </TableView>
+                            </VBox>
+
+                            <VBox spacing="12.0" styleClass="card">
+                                <Label text="Mouvements de stock" styleClass="card-heading"/>
+                                <HBox spacing="10.0">
+                                    <Button text="Prélever (FEFO)" onAction="#handlePrelever"
+                                            styleClass="primary-button"/>
+                                    <Button text="Restituer la vente sélectionnée" onAction="#handleRestituer"
+                                            styleClass="secondary-button"/>
+                                </HBox>
+                                <Label fx:id="venteLabel" styleClass="value-label" wrapText="true"/>
+                                <Label text="Lots prélevés" styleClass="field-caption"/>
+                                <ListView fx:id="prelevementList" prefHeight="130.0"/>
+                            </VBox>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </items>
+        </SplitPane>
+    </center>
+</BorderPane>

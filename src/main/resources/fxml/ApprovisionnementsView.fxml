@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.pharmacie.ui.controller.ApprovisionnementsController"
+            styleClass="page-root">
+
+    <top>
+        <VBox styleClass="page-header">
+            <Label text="Approvisionnements" styleClass="page-title"/>
+            <Label text="Enregistrer une entrée de stock (création d'un lot) et consulter l'historique"
+                   styleClass="page-subtitle"/>
+        </VBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.3" styleClass="selection-split">
+            <items>
+                <VBox spacing="10.0" styleClass="selection-pane">
+                    <padding>
+                        <Insets top="20.0" right="14.0" bottom="20.0" left="20.0"/>
+                    </padding>
+                    <Label text="Rechercher" styleClass="card-heading"/>
+                    <TextField fx:id="rechercheField" promptText="Nom du produit"/>
+                    <HBox spacing="8.0">
+                        <Button text="Rechercher" onAction="#handleRechercher"
+                                styleClass="primary-button"/>
+                        <Button text="Historique" onAction="#handleHistorique"
+                                styleClass="secondary-button"/>
+                    </HBox>
+                    <TreeView fx:id="arbreSelection" VBox.vgrow="ALWAYS"
+                              styleClass="selection-tree"/>
+                </VBox>
+
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="page-scroll">
+                    <content>
+                        <VBox spacing="18.0" styleClass="page-content">
+                            <padding>
+                                <Insets top="24.0" right="28.0" bottom="28.0" left="28.0"/>
+                            </padding>
+
+                            <VBox spacing="14.0" styleClass="card">
+                                <Label text="Nouvel approvisionnement" styleClass="card-heading"/>
+                                <GridPane hgap="14.0" vgap="10.0" styleClass="form-grid">
+                                    <Label text="Produit sélectionné" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                    <TextField fx:id="produitIdField" editable="false"
+                                               promptText="Sélectionnez dans l'arbre"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                               styleClass="id-field"/>
+
+                                    <Label text="Numéro de lot" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                    <TextField fx:id="numeroLotField" promptText="LOT-2026-001"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                                    <Label text="Date de réception" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                    <DatePicker fx:id="dateReceptionPicker"
+                                                GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                                    <Label text="Date de péremption" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                                    <DatePicker fx:id="datePeremptionPicker"
+                                                GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                                    <Label text="Quantité reçue" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                                    <TextField fx:id="quantiteField" promptText="0"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                                    <Label text="Fournisseur" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                                    <TextField fx:id="fournisseurField" promptText="Facultatif"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                                </GridPane>
+                                <Label fx:id="utilisateurLabel" styleClass="value-label"/>
+                                <HBox spacing="10.0">
+                                    <Button text="Enregistrer" onAction="#handleEnregistrer"
+                                            styleClass="primary-button"/>
+                                    <Button text="Effacer" onAction="#handleEffacer"
+                                            styleClass="secondary-button"/>
+                                </HBox>
+                                <Label fx:id="messageLabel" styleClass="inline-message" wrapText="true"/>
+                            </VBox>
+
+                            <VBox spacing="12.0" styleClass="card">
+                                <Label text="Historique des approvisionnements" styleClass="card-heading"/>
+                                <TableView fx:id="historiqueTable" prefHeight="260.0">
+                                    <columns>
+                                        <TableColumn fx:id="idCol" text="N°" prefWidth="60.0"/>
+                                        <TableColumn fx:id="produitCol" text="Produit" prefWidth="90.0"/>
+                                        <TableColumn fx:id="lotCol" text="Lot" prefWidth="140.0"/>
+                                        <TableColumn fx:id="dateCol" text="Date" prefWidth="130.0"/>
+                                        <TableColumn fx:id="quantiteCol" text="Quantité" prefWidth="100.0"/>
+                                        <TableColumn fx:id="fournisseurCol" text="Fournisseur" prefWidth="180.0"/>
+                                    </columns>
+                                    <placeholder>
+                                        <Label text="Aucun approvisionnement affiché"/>
+                                    </placeholder>
+                                </TableView>
+                            </VBox>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </items>
+        </SplitPane>
+    </center>
+</BorderPane>

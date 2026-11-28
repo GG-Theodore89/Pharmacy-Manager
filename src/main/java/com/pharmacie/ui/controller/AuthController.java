@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 public class AuthController {
 
     private final AuthService authService;
+    private final Runnable onLoginSuccess;
 
     @FXML private TabPane authTabs;
     @FXML private Tab connexionTab;
@@ -29,11 +30,22 @@ public class AuthController {
     @FXML private TextField adresseField;
     @FXML private TextField inscriptionEmailField;
     @FXML private PasswordField inscriptionMotDePasseField;
+    @FXML private Label inscriptionMotDePasseSuggestionLabel;
     @FXML private Label inscriptionErreurLabel;
 
     // The FXMLLoader must use a controller factory to supply AuthService.
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, Runnable onLoginSuccess) {
         this.authService = authService;
+        this.onLoginSuccess = onLoginSuccess;
+    }
+
+    @FXML
+    private void initialize() {
+        inscriptionMotDePasseField.textProperty().addListener(
+            (observable, ancien, valeur) -> UiFeedback.suggestionMotDePasse(
+                inscriptionMotDePasseSuggestionLabel, valeur
+            )
+        );
     }
 
     @FXML
@@ -51,8 +63,7 @@ public class AuthController {
             alert.setHeaderText(null);
             alert.setContentText("Bienvenue " + utilisateur.getPrenom() + " !");
             alert.showAndWait();
-
-            // TODO: Navigate to the main application screen here.
+            onLoginSuccess.run();
 
         } catch (PharmacieException e) {
             connexionErreurLabel.setText(e.getMessage());
@@ -97,5 +108,6 @@ public class AuthController {
         adresseField.clear();
         inscriptionEmailField.clear();
         inscriptionMotDePasseField.clear();
+        UiFeedback.suggestionMotDePasse(inscriptionMotDePasseSuggestionLabel, "");
     }
 }

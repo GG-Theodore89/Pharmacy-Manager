@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.pharmacie.ui.controller.BilansController"
+            styleClass="page-root">
+
+    <top>
+        <VBox styleClass="page-header">
+            <Label text="Historique et bilans" styleClass="page-title"/>
+            <Label text="Consulter les ventes sur une période, le détail d'une vente et le bilan"
+                   styleClass="page-subtitle"/>
+        </VBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.3" styleClass="selection-split">
+            <items>
+                <VBox spacing="10.0" styleClass="selection-pane">
+                    <padding>
+                        <Insets top="20.0" right="14.0" bottom="20.0" left="20.0"/>
+                    </padding>
+                    <Label text="Ventes de la période" styleClass="card-heading"/>
+                    <Button text="Recharger les ventes" onAction="#handleHistorique"
+                            styleClass="secondary-button"/>
+                    <TreeView fx:id="arbreVentes" VBox.vgrow="ALWAYS"
+                              styleClass="selection-tree"/>
+                </VBox>
+
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="page-scroll">
+                    <content>
+                        <VBox spacing="18.0" styleClass="page-content">
+                            <padding>
+                                <Insets top="24.0" right="28.0" bottom="28.0" left="28.0"/>
+                            </padding>
+
+                            <VBox spacing="12.0" styleClass="card">
+                                <Label text="Période" styleClass="card-heading"/>
+                                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                    <Label text="Du"/>
+                                    <DatePicker fx:id="debutPicker"/>
+                                    <Label text="Au"/>
+                                    <DatePicker fx:id="finPicker"/>
+                                    <Button text="Consulter les ventes" onAction="#handleHistorique"
+                                            styleClass="primary-button"/>
+                                    <Button text="Générer le bilan" onAction="#handleGenererBilan"
+                                            styleClass="secondary-button"/>
+                                </HBox>
+                                <Label fx:id="messageLabel" styleClass="inline-message" wrapText="true"/>
+                            </VBox>
+
+                            <VBox spacing="12.0" styleClass="card">
+                                <Label text="Détail d'une vente" styleClass="card-heading"/>
+                                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                    <Label text="Vente sélectionnée"/>
+                                    <TextField fx:id="venteIdField" editable="false"
+                                               promptText="Sélectionnez une vente dans l'arbre"
+                                               prefWidth="210.0" styleClass="id-field"/>
+                                    <Button text="Afficher le détail" onAction="#handleDetailVente"
+                                            styleClass="secondary-button"/>
+                                </HBox>
+                                <Label fx:id="detailLabel" styleClass="value-label" wrapText="true"/>
+                            </VBox>
+
+                            <VBox spacing="12.0" styleClass="card">
+                                <Label text="Bilan de la période" styleClass="card-heading"/>
+                                <HBox spacing="24.0">
+                                    <VBox spacing="4.0">
+                                        <Label text="Chiffre d'affaires" styleClass="field-caption"/>
+                                        <Label fx:id="caLabel" text="0,00" styleClass="metric-label"/>
+                                    </VBox>
+                                    <VBox spacing="4.0">
+                                        <Label text="Ventes validées" styleClass="field-caption"/>
+                                        <Label fx:id="nombreVentesLabel" text="0" styleClass="metric-label"/>
+                                    </VBox>
+                                    <VBox spacing="4.0">
+                                        <Label text="Annulations" styleClass="field-caption"/>
+                                        <Label fx:id="annulationsLabel" text="0" styleClass="metric-label"/>
+                                    </VBox>
+                                    <VBox spacing="4.0">
+                                        <Label text="Panier moyen" styleClass="field-caption"/>
+                                        <Label fx:id="panierMoyenLabel" text="0,00" styleClass="metric-label"/>
+                                    </VBox>
+                                </HBox>
+                            </VBox>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </items>
+        </SplitPane>
+    </center>
+</BorderPane>

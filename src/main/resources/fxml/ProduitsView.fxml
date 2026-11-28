@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.pharmacie.ui.controller.ProduitsController"
+            styleClass="page-root">
+
+    <top>
+        <VBox styleClass="page-header">
+            <Label text="Catalogue des produits" styleClass="page-title"/>
+            <Label text="Ajouter, modifier, désactiver un produit et gérer les seuils d'alerte"
+                   styleClass="page-subtitle"/>
+        </VBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.3" styleClass="selection-split">
+            <items>
+                <VBox spacing="10.0" styleClass="selection-pane">
+                    <padding>
+                        <Insets top="20.0" right="14.0" bottom="20.0" left="20.0"/>
+                    </padding>
+                    <Label text="Rechercher" styleClass="card-heading"/>
+                    <TextField fx:id="rechercheField" promptText="Nom du produit"/>
+                    <HBox spacing="8.0">
+                        <Button text="Rechercher" onAction="#handleRechercher"
+                                styleClass="primary-button"/>
+                        <Button text="Tout afficher" onAction="#handleAfficherTous"
+                                styleClass="secondary-button"/>
+                    </HBox>
+                    <TreeView fx:id="arbreProduits" VBox.vgrow="ALWAYS"
+                              styleClass="selection-tree"/>
+                </VBox>
+
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="page-scroll">
+                    <content>
+                        <VBox spacing="18.0" styleClass="page-content">
+                            <padding>
+                                <Insets top="24.0" right="28.0" bottom="28.0" left="28.0"/>
+                            </padding>
+
+                            <VBox spacing="14.0" styleClass="card">
+                                <Label text="Fiche produit" styleClass="card-heading"/>
+                                <GridPane hgap="14.0" vgap="10.0" styleClass="form-grid">
+                                    <Label text="Type" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                    <ComboBox fx:id="typeComboBox" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                                    <Label text="Nom" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                    <TextField fx:id="nomField" promptText="Nom du produit"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                                    <Label text="Description" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                    <TextField fx:id="descriptionField" promptText="Description"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                                    <Label text="Prix de vente" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                                    <TextField fx:id="prixField" promptText="0.00"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                                    <Label text="Seuil d'alerte" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                                    <TextField fx:id="seuilField" promptText="0"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                                    <Label text="Statut" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                                    <HBox spacing="18.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                        <CheckBox fx:id="actifCheckBox" text="Actif"/>
+                                        <CheckBox fx:id="surOrdonnanceCheckBox" text="Sur ordonnance"/>
+                                    </HBox>
+                                </GridPane>
+                                <HBox spacing="10.0">
+                                    <Button text="Ajouter le produit" onAction="#handleAjouter"
+                                            styleClass="primary-button"/>
+                                    <Button text="Effacer le formulaire" onAction="#handleEffacerFormulaire"
+                                            styleClass="secondary-button"/>
+                                </HBox>
+                                <Label fx:id="messageLabel" styleClass="inline-message" wrapText="true"/>
+                            </VBox>
+
+                            <VBox spacing="12.0" styleClass="card">
+                                <Label text="Actions sur le produit sélectionné" styleClass="card-heading"/>
+                                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                    <Label text="Identifiant"/>
+                                    <TextField fx:id="idField" editable="false"
+                                               promptText="Sélectionnez dans l'arbre"
+                                               prefWidth="150.0" styleClass="id-field"/>
+                                    <Button text="Modifier" onAction="#handleModifier"
+                                            styleClass="secondary-button"/>
+                                    <Button text="Désactiver" onAction="#handleDesactiver"
+                                            styleClass="danger-button"/>
+                                </HBox>
+                                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                    <Label text="Nouveau seuil"/>
+                                    <TextField fx:id="nouveauSeuilField" promptText="0" prefWidth="90.0"/>
+                                    <Button text="Définir le seuil" onAction="#handleDefinirSeuil"
+                                            styleClass="secondary-button"/>
+                                </HBox>
+                            </VBox>
+
+                            <VBox spacing="12.0" styleClass="card">
+                                <Label text="Catalogue" styleClass="card-heading"/>
+                                <TableView fx:id="resultatsTable" prefHeight="260.0">
+                                    <columns>
+                                        <TableColumn fx:id="idCol" text="N°" prefWidth="60.0"/>
+                                        <TableColumn fx:id="nomCol" text="Produit" prefWidth="220.0"/>
+                                        <TableColumn fx:id="typeCol" text="Type" prefWidth="140.0"/>
+                                        <TableColumn fx:id="prixCol" text="Prix" prefWidth="100.0"/>
+                                        <TableColumn fx:id="seuilCol" text="Seuil" prefWidth="80.0"/>
+                                        <TableColumn fx:id="actifCol" text="Actif" prefWidth="80.0"/>
+                                    </columns>
+                                    <placeholder>
+                                        <Label text="Aucun produit affiché"/>
+                                    </placeholder>
+                                </TableView>
+                            </VBox>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </items>
+        </SplitPane>
+    </center>
+</BorderPane>
