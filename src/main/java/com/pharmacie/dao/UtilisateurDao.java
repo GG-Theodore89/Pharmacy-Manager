@@ -1,3 +1,10 @@
 package com.pharmacie.dao;
 
-public interface UtilisateurDao {}
+import com.pharmacie.model.Utilisateur;
+
+public interface UtilisateurDao {
+
+    void enregistrer(Utilisateur utilisateur);
+
+    Utilisateur trouverParEmail(String email);
+}

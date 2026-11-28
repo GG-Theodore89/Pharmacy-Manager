@@ -2,16 +2,16 @@ package com.pharmacie.service.impl;
 
 import com.pharmacie.service.*;
 import com.pharmacie.model.Utilisateur;
-import com.pharmacie.dao.UtilisateurDAO;
+import com.pharmacie.dao.UtilisateurDao;
 import com.pharmacie.security.PasswordUtil;
 import com.pharmacie.security.SessionManager;
 
 public class AuthServiceImpl implements AuthService {
-    private final UtilisateurDAO utilisateurDAO;
+    private final UtilisateurDao utilisateurDAO;
     private final SessionManager sessionManager;
 
     public AuthServiceImpl(
-            UtilisateurDAO utilisateurDAO,
+            UtilisateurDao utilisateurDAO,
             SessionManager sessionManager) {
 
         this.utilisateurDAO = utilisateurDAO;
@@ -45,6 +45,7 @@ public class AuthServiceImpl implements AuthService {
                 "Cette adresse e-mail est déjà utilisée."
             );
         }
+
 
         String hash = PasswordUtil.hash(u.getMotDePasse());
 
